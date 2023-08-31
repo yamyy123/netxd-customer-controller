@@ -4,10 +4,13 @@ import (
 	"context"
 	"fmt"
 
-	pro "netxd_project/netxd_customer"
-	controllers "github.com/yamyy123/netxd-customer-controller/controller"
-	"module/netxd_dal/service"
 	"net"
+	pro "github.com/yamyy123/netxd-customer/netxd_customer"
+
+	controllers "github.com/yamyy123/netxd-customer-controller/controller"
+	services "github.com/yamyy123/netxd-dal/services"
+	config "github.com/yamyy123/netxd_config/config"
+	constants "github.com/yamyy123/netxd_config/constants"
 
 	"go.mongodb.org/mongo-driver/mongo"
 	"google.golang.org/grpc"
@@ -15,7 +18,7 @@ import (
 
 func initDatabase(client *mongo.Client) {
 	CustomerCollection := config.GetCollection(client, "netxdb", "customer")
-	controllers.CustomerService = service.InitCustomerService(CustomerCollection, context.Background())
+	controllers.CustomerService = services.InitCustomerService(CustomerCollection, context.Background())
 
 }
 
@@ -26,7 +29,10 @@ func main() {
 		panic(err)
 	}
 	initDatabase(mongoclient)
+	// fmt.Println("hi")
 	lis, err := net.Listen("tcp", constants.Port)
+	// fmt.Println("hii")
+
 	if err != nil {
 		fmt.Printf("Failed to listen: %v", err)
 		return
